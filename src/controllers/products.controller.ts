@@ -9,7 +9,9 @@ import {
   Delete,
 } from '@nestjs/common';
 
+import { ParseIntPipe } from './../common/parse-int/parse-int.pipe';
 import { ProductsService } from './../services/products.service';
+
 @Controller('products')
 export class ProductsController {
   constructor(private productService: ProductsService) {}
@@ -23,8 +25,8 @@ export class ProductsController {
   }
 
   @Get(':productId')
-  getProduct(@Param('productId') productId: string) {
-    return this.productService.findOne(+productId);
+  getOne(@Param('productId', ParseIntPipe) productId: number) {
+    return this.productService.findOne(productId);
   }
 
   @Post()
@@ -38,9 +40,6 @@ export class ProductsController {
   }
   @Delete(':id')
   delete(@Param('id') id: number) {
-    return {
-      message: 'accion de borrar',
-      id,
-    };
+    return this.productService.remove(+id);
   }
 }
